@@ -34,3 +34,7 @@ Github guide on [Adding a local repository to GitHub using Git](https://docs.git
 ```bash
 uv venv
 source .venv/bin/activate
+
+4. (optional) As we are running the app outside of a Space environment, we need to logged in to Huggingface
+```bash
+huggingface-cli login
