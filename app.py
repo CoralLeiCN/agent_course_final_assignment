@@ -1,31 +1,40 @@
-import os
-import gradio as gr
-import requests
 import inspect
-import pandas as pd
-from utils import gemini_model_OpenAIServer
+import os
 import time
+
+import gradio as gr
+import pandas as pd
+import requests
+from pydantic import BaseModel
+
+from utils import gemini_model_liteLLM
 
 # (Keep Constants as is)
 # --- Constants ---
 DEFAULT_API_URL = "https://agents-course-unit4-scoring.hf.space"
 
 
+class final_answer(BaseModel):
+    answer: str
+
+
 # --- Basic Agent Definition ---
 # ----- THIS IS WERE YOU CAN BUILD WHAT YOU WANT ------
 class BasicAgent:
     def __init__(self):
-        self.model = gemini_model_OpenAIServer(
-            "gemini-2.0-flash"
-        )  # Example model, replace with your own
+        self.model = gemini_model_liteLLM(
+            "gemini-2.0-flash",
+            response_format=final_answer)
+          # Example model, replace with your own
         print("BasicAgent initialized.")
 
     def __call__(self, question: str) -> str:
         print(f"Agent received question (first 50 chars): {question[:50]}...")
-        response = self.model(
-            [{"role": "user", "content": [{"type": "text", "text": question}]}]
+
+        response = self.model.generate(
+            messages=[{"role": "user", "content": [{"type": "text", "text": question}]}]
         )
-        final_answer = response.content
+        final_answer = eval(response.content)["answer"]
         return final_answer
 
 
