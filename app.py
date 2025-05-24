@@ -32,7 +32,9 @@ class BasicAgent:
         print(f"Agent received question (first 50 chars): {question[:50]}...")
 
         response = self.model.generate(
-            messages=[{"role": "user", "content": [{"type": "text", "text": question}]}]
+            messages=[     {"role": "system", "content": [{"type": "text", "text": "You are a general AI assistant. I will ask you a question. Report your thoughts, and your final answer. The final answer should be a number OR as few words as possible OR a comma separated list of numbers and/or strings. If you are asked for a number, don't use comma to write your number neither use units such as $ or percent sign unless specified otherwise. If you are asked for a string, don't use articles, neither abbreviations (e.g. for cities), and write the digits in plain text unless specified otherwise. If you are asked for a comma separated list, apply the above rules depending of whether the element to be put in the list is a number or a string."}]},
+                {"role": "user", "content": [{"type": "text", "text": question}]}
+            ]
         )
         final_answer = eval(response.content)["answer"]
         return final_answer
