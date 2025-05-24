@@ -3,7 +3,8 @@ import gradio as gr
 import requests
 import inspect
 import pandas as pd
-
+from utils import gemini_model_OpenAIServer
+import time
 # (Keep Constants as is)
 # --- Constants ---
 DEFAULT_API_URL = "https://agents-course-unit4-scoring.hf.space"
@@ -12,12 +13,13 @@ DEFAULT_API_URL = "https://agents-course-unit4-scoring.hf.space"
 # ----- THIS IS WERE YOU CAN BUILD WHAT YOU WANT ------
 class BasicAgent:
     def __init__(self):
+        self.model = gemini_model_OpenAIServer("gemini-2.0-flash")  # Example model, replace with your own
         print("BasicAgent initialized.")
     def __call__(self, question: str) -> str:
         print(f"Agent received question (first 50 chars): {question[:50]}...")
-        fixed_answer = "This is a default answer."
-        print(f"Agent returning fixed answer: {fixed_answer}")
-        return fixed_answer
+        response = self.model([{"role": "user", "content": [{"type": "text", "text": question}]}])
+        final_answer = response.content
+        return final_answer
 
 def run_and_submit_all( profile: gr.OAuthProfile | None):
     """
@@ -73,7 +75,13 @@ def run_and_submit_all( profile: gr.OAuthProfile | None):
     results_log = []
     answers_payload = []
     print(f"Running agent on {len(questions_data)} questions...")
+
+    no_question = 0
     for item in questions_data:
+        no_question += 1
+        # sleep 1 minute every 10 questions to avoid rate limiting
+        if no_question % 10 == 0:
+            time.sleep(60)
         task_id = item.get("task_id")
         question_text = item.get("question")
         if not task_id or question_text is None:
