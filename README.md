@@ -38,3 +38,8 @@ source .venv/bin/activate
 4. (optional) As we are running the app outside of a Space environment, we need to logged in to Huggingface
 ```bash
 huggingface-cli login
+
+5. run the app locally
+```bash
+uv run app.py
+```
