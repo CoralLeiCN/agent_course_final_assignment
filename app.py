@@ -11,38 +11,10 @@ from agent.prompts import system_prompt
 from agent.tools import TranscribeYoutubeVideo
 from utils import gemini_model_liteLLM
 from smolagents import WebSearchTool
+from agent import BasicAgent
 
 # --- Constants ---
 DEFAULT_API_URL = "https://agents-course-unit4-scoring.hf.space"
-
-
-class final_answer(BaseModel):
-    answer: str
-
-
-# --- Basic Agent Definition ---
-# ----- THIS IS WERE YOU CAN BUILD WHAT YOU WANT ------
-class BasicAgent:
-    def __init__(self):
-        self.model = gemini_model_liteLLM(
-            "gemini-2.0-flash", response_format=final_answer
-        )
-        # Example model, replace with your own
-        transcribe_youtube_video = TranscribeYoutubeVideo()
-        search_tool = WebSearchTool()  # (Keep Constants as is)
-
-        model = gemini_model_liteLLM("gemini-2.0-flash")
-        self.code_agent = CodeAgent(
-            tools=[transcribe_youtube_video, search_tool], model=model, max_steps=10
-        )
-
-        print("BasicAgent initialized.")
-
-    def __call__(self, question: str) -> str:
-        print(f"Agent received question (first 50 chars): {question[:50]}...")
-        # Run the agent to find the best catering service
-        final_answer = self.code_agent.run(f"{system_prompt} \nQuestion: {question}")
-        return final_answer
 
 
 def run_and_submit_all(profile: gr.OAuthProfile | None):
@@ -66,7 +38,7 @@ def run_and_submit_all(profile: gr.OAuthProfile | None):
 
     # 1. Instantiate Agent ( modify this part to create your agent)
     try:
-        agent = BasicAgent()
+        code_agent = BasicAgent()
     except Exception as e:
         print(f"Error instantiating agent: {e}")
         return f"Error initializing agent: {e}", None
@@ -112,7 +84,7 @@ def run_and_submit_all(profile: gr.OAuthProfile | None):
             print(f"Skipping item with missing task_id or question: {item}")
             continue
         try:
-            submitted_answer = agent(question_text)
+            submitted_answer = code_agent(question_text)
             answers_payload.append(
                 {"task_id": task_id, "submitted_answer": submitted_answer}
             )
