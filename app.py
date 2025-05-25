@@ -6,10 +6,12 @@ import gradio as gr
 import pandas as pd
 import requests
 from pydantic import BaseModel
-
+from smolagents import CodeAgent
+from agent.prompts import system_prompt
+from agent.tools import TranscribeYoutubeVideo
 from utils import gemini_model_liteLLM
+from smolagents import WebSearchTool
 
-# (Keep Constants as is)
 # --- Constants ---
 DEFAULT_API_URL = "https://agents-course-unit4-scoring.hf.space"
 
@@ -23,20 +25,23 @@ class final_answer(BaseModel):
 class BasicAgent:
     def __init__(self):
         self.model = gemini_model_liteLLM(
-            "gemini-2.0-flash",
-            response_format=final_answer)
-          # Example model, replace with your own
+            "gemini-2.0-flash", response_format=final_answer
+        )
+        # Example model, replace with your own
+        transcribe_youtube_video = TranscribeYoutubeVideo()
+        search_tool = WebSearchTool()  # (Keep Constants as is)
+
+        model = gemini_model_liteLLM("gemini-2.0-flash")
+        self.code_agent = CodeAgent(
+            tools=[transcribe_youtube_video, search_tool], model=model, max_steps=10
+        )
+
         print("BasicAgent initialized.")
 
     def __call__(self, question: str) -> str:
         print(f"Agent received question (first 50 chars): {question[:50]}...")
-
-        response = self.model.generate(
-            messages=[     {"role": "system", "content": [{"type": "text", "text": "You are a general AI assistant. I will ask you a question. Report your thoughts, and your final answer. The final answer should be a number OR as few words as possible OR a comma separated list of numbers and/or strings. If you are asked for a number, don't use comma to write your number neither use units such as $ or percent sign unless specified otherwise. If you are asked for a string, don't use articles, neither abbreviations (e.g. for cities), and write the digits in plain text unless specified otherwise. If you are asked for a comma separated list, apply the above rules depending of whether the element to be put in the list is a number or a string."}]},
-                {"role": "user", "content": [{"type": "text", "text": question}]}
-            ]
-        )
-        final_answer = eval(response.content)["answer"]
+        # Run the agent to find the best catering service
+        final_answer = self.code_agent.run(f"{system_prompt} \nQuestion: {question}")
         return final_answer
 
 
@@ -99,7 +104,7 @@ def run_and_submit_all(profile: gr.OAuthProfile | None):
     for item in questions_data:
         no_question += 1
         # sleep 1 minute every 10 questions to avoid rate limiting
-        if no_question % 10 == 0:
+        if no_question % 3 == 0:
             time.sleep(60)
         task_id = item.get("task_id")
         question_text = item.get("question")
