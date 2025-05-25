@@ -34,6 +34,7 @@ Github guide on [Adding a local repository to GitHub using Git](https://docs.git
 ```bash
 uv venv
 source .venv/bin/activate
+```
 
 4. (optional) As we are running the app outside of a Space environment, we need to logged in to Huggingface
 ```bash
@@ -42,4 +43,6 @@ huggingface-cli login
 5. run the app locally
 ```bash
 uv run app.py
+# Or Automatically reloads the Gradio app
+uv run gradio app.py
 ```
