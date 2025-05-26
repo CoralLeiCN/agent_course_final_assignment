@@ -1,3 +1,12 @@
+[build-system]
+requires = ["setuptools>=68.0.0", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[tool.setuptools.packages.find]
+where = ["."]  # list of folders that contain the packages (["."] by default)
+include = ["agent*"]  # package names should match these glob patterns
+exclude = ["agent.tests*", "agent.examples*"]  # exclude packages matching these patterns
+
 [project]
 name = "agent-course-final-assignment"
 version = "0.1.0"
@@ -8,6 +17,7 @@ dependencies = [
     "google-genai>=1.16.1",
     "gradio>=5.31.0",
     "itsdangerous>=2.2.0",
+    "markdownify>=1.1.0",
     "openpyxl>=3.1.5",
     "pydantic>=2.11.5",
     "requests>=2.32.3",
