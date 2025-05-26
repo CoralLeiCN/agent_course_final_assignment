@@ -9,7 +9,7 @@ from pydantic import BaseModel
 from smolagents import CodeAgent
 from agent.prompts import system_prompt
 from agent.tools import TranscribeYoutubeVideo
-from utils import gemini_model_liteLLM
+from agent.utils import gemini_model_liteLLM
 from smolagents import WebSearchTool
 from agent import BasicAgent
 
@@ -72,12 +72,7 @@ def run_and_submit_all(profile: gr.OAuthProfile | None):
     answers_payload = []
     print(f"Running agent on {len(questions_data)} questions...")
 
-    no_question = 0
     for item in questions_data:
-        no_question += 1
-        # sleep 1 minute every 10 questions to avoid rate limiting
-        if no_question % 3 == 0:
-            time.sleep(60)
         task_id = item.get("task_id")
         question_text = item.get("question")
         if not task_id or question_text is None:

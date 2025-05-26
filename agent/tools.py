@@ -27,7 +27,7 @@ class TranscribeYoutubeVideo(Tool):
         client = genai.Client()
         prompt = "Transcribe the audio from this video, giving timestamps for salient events in the video. Also provide visual descriptions."
         response = client.models.generate_content(
-            model="models/gemini-2.0-flash",
+            model="gemini-2.5-flash-preview-05-20",
             contents=types.Content(
                 parts=[
                     types.Part(file_data=types.FileData(file_uri=youtube_uri)),
