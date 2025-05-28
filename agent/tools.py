@@ -1,6 +1,7 @@
 from google import genai
 from google.genai import types
 from smolagents import Tool
+import requests
 
 
 class TranscribeYoutubeVideo(Tool):
@@ -40,3 +41,43 @@ class TranscribeYoutubeVideo(Tool):
         transcript = response.text
 
         return transcript
+
+
+class DownloadFile(Tool):
+    name = "download_file"
+    description = """Download a specific file associated with a given task ID from an API endpoint.
+    """
+    inputs = {
+        "task_id": {
+            "type": "string",
+            "description": "the task ID associated with the file",
+        },
+    }
+    output_type = "string"
+
+    def forward(self, task_id: str):
+        DEFAULT_API_URL = "https://agents-course-unit4-scoring.hf.space"
+
+        response = requests.get(f"{DEFAULT_API_URL}/files/{task_id}")
+        response.raise_for_status()
+        return response.content
+
+
+class ReadExcelFileBytes(Tool):
+    name = "read_excel_file_bytes"
+    description = """Read the content of an Excel file downloaded from a specific task ID.
+    """
+    inputs = {
+        "excel_bytes": {
+            "type": "string",
+            "description": "the bytes content of the Excel file",
+        },
+    }
+    output_type = "string"
+
+    def forward(self, excel_bytes: str):
+        import pandas as pd
+        from io import BytesIO
+
+        df = pd.read_excel(BytesIO(excel_bytes))
+        return df.to_string()
