@@ -46,3 +46,16 @@ uv run app.py
 # Or Automatically reloads the Gradio app
 uv run gradio app.py
 ```
+
+# experiments
+| Features | Model | Score (out of 20) | Notes |
+| --- | --- | --- | --- |
+| Directly call LLM with questions | gemini-flash 2.0 | 1 | direct call |
+| + Structured Output: Response Format | gemini-flash 2.0 | 3 |  |
+| + system prompt from GAIA, slightly modified | gemini-flash 2.0 | 3 |  |
+| + Agentic LLM with Smolagent & Add “Understand video” tool using gemini-flash. | gemini-flash 2.0 | 1-4 | Results varied due to `Codeagent` output formatting issues. |
+| + WebSearch tool | gemini-flash 2.0 | 7 | Greatly improved, still has formatting issues |
+| + Change model | gemini-flash 2.5 | 7 |  |
+| + VisitWebpageTool | gemini-flash 2.5 | 10-12 | cannot see image, mp3, excel file. |
+| + DownloadFile & ReadExcelFileBytes | gemini-flash 2.5 | 13 |  |
+|  |  |  |  |
