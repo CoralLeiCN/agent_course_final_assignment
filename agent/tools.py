@@ -3,6 +3,46 @@ from google.genai import types
 from smolagents import Tool
 import requests
 
+from google.genai import types
+
+
+class TranscribeAudioBytes(Tool):
+    name = "transcribe_audio_bytes"
+    description = """Transcribe audio bytes using Google GenAI.
+    This function uses the Gemini Flash model to transcribe the audio from a
+    byte array, providing timestamps for salient events and visual descriptions.
+    The response may include answers to an optional question about the audio.
+    """
+    inputs = {
+        "audio_bytes": {
+            "type": "string",
+            "description": "the audio bytes to transcribe",
+        },
+        "question": {
+            "type": "string",
+            "description": "an optional question to guide the transcription",
+            "nullable": True,
+        },
+    }
+    output_type = "string"
+
+    def forward(self, audio_bytes: str, question: str = ""):
+        client = genai.Client()
+        prompt = "Transcribe the audio from this byte array, giving timestamps for salient events in the audio. Also provide visual descriptions."
+        response = client.models.generate_content(
+            model="gemini-2.5-flash-preview-05-20",
+            contents=[
+                f"{prompt} And also try to answer the question: {question}",
+                types.Part.from_bytes(
+                    data=audio_bytes,
+                    mime_type="audio/mp3",
+                ),
+            ],
+        )
+        transcript = response.text
+
+        return transcript
+
 
 class TranscribeYoutubeVideo(Tool):
     name = "transcribe_youtube_video"

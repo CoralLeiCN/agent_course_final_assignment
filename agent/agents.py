@@ -5,7 +5,12 @@ from smolagents import CodeAgent, WebSearchTool, VisitWebpageTool
 
 import time
 from agent.prompts import system_prompt
-from agent.tools import TranscribeYoutubeVideo, DownloadFile, ReadExcelFileBytes
+from agent.tools import (
+    TranscribeYoutubeVideo,
+    DownloadFile,
+    ReadExcelFileBytes,
+    TranscribeAudioBytes,
+)
 from agent.utils import gemini_client, gemini_model_liteLLM
 from google.genai.types import GenerateContentConfig, ThinkingConfig
 
@@ -19,18 +24,21 @@ class final_answer(BaseModel):
 # --- Basic Agent Definition ---
 # ----- THIS IS WERE YOU CAN BUILD WHAT YOU WANT ------
 class BasicAgent:
-    def __init__(self, sleep=60):
+    def __init__(self, sleep=30):
         self.client = gemini_client()
         self.sleep = sleep
         transcribe_youtube_video = TranscribeYoutubeVideo()
+        transcribe_audio_bytes = TranscribeAudioBytes()
         search_tool = WebSearchTool()
         visit_web_tool = VisitWebpageTool()
         download_file_tool = DownloadFile()
         read_excel_file_tool = ReadExcelFileBytes()
+
         model = gemini_model_liteLLM("gemini-2.5-flash-preview-05-20")
         self.code_agent = CodeAgent(
             tools=[
                 transcribe_youtube_video,
+                transcribe_audio_bytes,
                 search_tool,
                 visit_web_tool,
                 download_file_tool,
