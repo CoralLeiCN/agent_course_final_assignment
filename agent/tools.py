@@ -85,7 +85,8 @@ class TranscribeYoutubeVideo(Tool):
 
 class DownloadFile(Tool):
     name = "download_file"
-    description = """Download a specific file associated with a given task ID from an API endpoint.
+    description = """Download a specific file associated with a given task ID from an API endpoint. The return value is the raw bytes of the file.
+    Do not print the file content directly, as it may be large or binary data.
     """
     inputs = {
         "task_id": {

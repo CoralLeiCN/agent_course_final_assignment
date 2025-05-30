@@ -24,7 +24,7 @@ class final_answer(BaseModel):
 # --- Basic Agent Definition ---
 # ----- THIS IS WERE YOU CAN BUILD WHAT YOU WANT ------
 class BasicAgent:
-    def __init__(self, sleep=30):
+    def __init__(self, sleep=60):
         self.client = gemini_client()
         self.sleep = sleep
         transcribe_youtube_video = TranscribeYoutubeVideo()
