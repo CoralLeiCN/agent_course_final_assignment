@@ -21,10 +21,16 @@ class final_answer(BaseModel):
     answer: str
 
 
+# add function to sleep 10 second to avoid rate limiting issues
+def delay(seconds: int = 10):
+    """Delay execution for a specified number of seconds."""
+    time.sleep(seconds)
+
+
 # --- Basic Agent Definition ---
 # ----- THIS IS WERE YOU CAN BUILD WHAT YOU WANT ------
 class BasicAgent:
-    def __init__(self, sleep=60):
+    def __init__(self, sleep=10):
         self.client = gemini_client()
         self.sleep = sleep
         transcribe_youtube_video = TranscribeYoutubeVideo()
@@ -45,6 +51,7 @@ class BasicAgent:
                 read_excel_file_tool,
             ],
             model=model,
+            step_callbacks=time.sleep(self.sleep),
             max_steps=15,
         )
 
@@ -52,7 +59,6 @@ class BasicAgent:
 
     def __call__(self, task_id, question: str) -> str:
         client = self.client
-        time.sleep(self.sleep)  # Avoid rate limiting issues
         print(f"Agent received question (first 50 chars): {question[:50]}...")
         # Run the agent to find the best catering service
         answer = self.code_agent.run(f"Task id: {task_id}, Question: {question}")
