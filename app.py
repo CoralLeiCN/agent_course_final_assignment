@@ -6,12 +6,12 @@ import gradio as gr
 import pandas as pd
 import requests
 from pydantic import BaseModel
-from smolagents import CodeAgent
+from smolagents import CodeAgent, WebSearchTool
+
+from agent import BasicAgent
 from agent.prompts import system_prompt
 from agent.tools import TranscribeYoutubeVideo
 from agent.utils import gemini_model_liteLLM
-from smolagents import WebSearchTool
-from agent import BasicAgent
 
 # --- Constants ---
 DEFAULT_API_URL = "https://agents-course-unit4-scoring.hf.space"
