@@ -25,19 +25,25 @@ class final_answer(BaseModel):
     answer: str
 
 
-# add function to sleep 10 second to avoid rate limiting issues
-def delay(seconds: int = 10):
-    """Delay execution for a specified number of seconds."""
-    time.sleep(seconds)
+def delay_6_seconds(
+    agent: CodeAgent,
+) -> bool:
+    """
+    Delay execution for 6 seconds.
+    """
+    time.sleep(6)
+    return True
+
+
+STEP_CALLBACKS = [delay_6_seconds]
 
 
 # --- Basic Agent Definition ---
 # ----- THIS IS WERE YOU CAN BUILD WHAT YOU WANT ------
 class BasicAgent:
-    def __init__(self, model="gemini-2.5-flash-preview-05-20", sleep=10):
+    def __init__(self, model="gemini-2.5-flash-preview-05-20"):
         self.model = model
         self.client = gemini_client()
-        self.sleep = sleep
         transcribe_youtube_video = TranscribeYoutubeVideo()
         transcribe_audio_bytes = TranscribeAudioBytes()
         search_tool = WebSearchTool()
@@ -56,7 +62,7 @@ class BasicAgent:
                 read_excel_file_tool,
             ],
             model=model,
-            step_callbacks=time.sleep(self.sleep),
+            step_callbacks=STEP_CALLBACKS,
             max_steps=15,
         )
 

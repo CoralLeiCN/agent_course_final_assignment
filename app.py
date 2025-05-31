@@ -38,7 +38,7 @@ def run_and_submit_all(profile: gr.OAuthProfile | None):
 
     # 1. Instantiate Agent ( modify this part to create your agent)
     try:
-        code_agent = BasicAgent()
+        code_agent = BasicAgent(model="gemini-2.0-flash")
     except Exception as e:
         print(f"Error instantiating agent: {e}")
         return f"Error initializing agent: {e}", None
