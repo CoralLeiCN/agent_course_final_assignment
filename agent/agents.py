@@ -25,17 +25,17 @@ class final_answer(BaseModel):
     answer: str
 
 
-def delay_6_seconds(
+def delay_8_seconds(
     agent: CodeAgent,
 ) -> bool:
     """
-    Delay execution for 6 seconds.
+    Delay execution for 8 seconds.
     """
-    time.sleep(6)
+    time.sleep(8)
     return True
 
 
-STEP_CALLBACKS = [delay_6_seconds]
+STEP_CALLBACKS = [delay_8_seconds]
 
 
 # --- Basic Agent Definition ---
