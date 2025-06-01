@@ -1,10 +1,60 @@
+import io
+
+import requests
 from google import genai
 from google.genai import types
-from smolagents import Tool
-import requests
 from PIL import Image
-import io
-from google.genai import types
+from smolagents import Tool
+
+
+class CodeExecutionTool(Tool):
+    name = "execute_code"
+    description = """Execute Python code and answer the question if provided.
+    This tool uses Gemini to execute Python code and returns the output of the execution.
+    The code should be a valid Python snippet that can be executed safely.
+    """
+    inputs = {
+        "code_bytes": {
+            "type": "string",
+            "description": "The Python code to execute in bytes",
+        },
+        "question": {
+            "type": "string",
+            "description": "Optional question to answer based on the code execution",
+            "nullable": True,
+        },
+    }
+    output_type = "string"
+
+    def forward(self, code_bytes: str, question: str = ""):
+        client = genai.Client()
+        code_str = code_bytes.decode("utf-8")
+        contents = [
+            types.Content(
+                role="user",
+                parts=[
+                    types.Part(
+                        text=f"{question} \n\n Run this code and answer the question: \n ```python \n {code_str}"
+                    )
+                ],
+            )
+        ]
+
+        # usually the response will have four parts:
+        # 1. The first response
+        # 2. The code execution
+        # 3. The code execution result
+        # 4. The final answer (augmented with the code execution result)
+        response = client.models.generate_content(
+            model="gemini-2.5-flash-preview-05-20",
+            contents=contents,
+            config=types.GenerateContentConfig(
+                tools=[types.Tool(code_execution=types.ToolCodeExecution)]
+            ),
+        )
+
+        return response.candidates[0].content.parts[-1].text
+
 
 class UnderstandImageBytes(Tool):
     name = "understand_image_bytes"
@@ -34,12 +84,12 @@ class UnderstandImageBytes(Tool):
         response = client.models.generate_content(
             model="gemini-2.5-flash-preview-05-20",
             contents=[
-            f"{prompt} And answer the question accurately based on the visual information in the image. question: {question} ",
-            types.Part.from_bytes(
-                data=image_bytes,
-                mime_type=f'image/{image.format}',
-            ),
-            ]
+                f"{prompt} And answer the question accurately based on the visual information in the image. question: {question} ",
+                types.Part.from_bytes(
+                    data=image_bytes,
+                    mime_type=f"image/{image.format}",
+                ),
+            ],
         )
 
         return response.text
@@ -156,8 +206,9 @@ class ReadExcelFileBytes(Tool):
     output_type = "string"
 
     def forward(self, excel_bytes: str):
-        import pandas as pd
         from io import BytesIO
+
+        import pandas as pd
 
         df = pd.read_excel(BytesIO(excel_bytes))
         return df.to_string()

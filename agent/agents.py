@@ -14,6 +14,7 @@ from agent.tools import (
     TranscribeAudioBytes,
     TranscribeYoutubeVideo,
     UnderstandImageBytes,
+    CodeExecutionTool,
 )
 from agent.utils import gemini_client, gemini_model_liteLLM
 
@@ -52,6 +53,7 @@ class BasicAgent:
         download_file_tool = DownloadFile()
         read_excel_file_tool = ReadExcelFileBytes()
         understand_image_bytes = UnderstandImageBytes()
+        code_execution_tool = CodeExecutionTool()
 
         model = gemini_model_liteLLM(self.model)
 
@@ -68,6 +70,7 @@ class BasicAgent:
                 download_file_tool,
                 read_excel_file_tool,
                 understand_image_bytes,
+                code_execution_tool,
             ],
             model=model,
             step_callbacks=STEP_CALLBACKS,
