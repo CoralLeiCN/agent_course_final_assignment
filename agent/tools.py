@@ -2,8 +2,47 @@ from google import genai
 from google.genai import types
 from smolagents import Tool
 import requests
-
+from PIL import Image
+import io
 from google.genai import types
+
+class UnderstandImageBytes(Tool):
+    name = "understand_image_bytes"
+    description = """This function can analyze the image from a byte array and provide
+      a description of its content. If an optional question related to the image is also
+      provided, the function will also return the answers, relying solely on the visual 
+      information present in the image.
+    """
+    inputs = {
+        "image_bytes": {
+            "type": "string",
+            "description": "the image bytes to analyze",
+        },
+        "question": {
+            "type": "string",
+            "description": "an question about the image",
+            "nullable": True,
+        },
+    }
+    output_type = "string"
+
+    def forward(self, image_bytes: str, question: str = ""):
+        client = genai.Client()
+        image = Image.open(io.BytesIO(image_bytes))
+        prompt = "Analyze this image and provide a description of its content."
+
+        response = client.models.generate_content(
+            model="gemini-2.5-flash-preview-05-20",
+            contents=[
+            f"{prompt} And answer the question accurately based on the visual information in the image. question: {question} ",
+            types.Part.from_bytes(
+                data=image_bytes,
+                mime_type=f'image/{image.format}',
+            ),
+            ]
+        )
+
+        return response.text
 
 
 class TranscribeAudioBytes(Tool):

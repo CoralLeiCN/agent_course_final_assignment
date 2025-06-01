@@ -13,6 +13,7 @@ from agent.tools import (
     ReadExcelFileBytes,
     TranscribeAudioBytes,
     TranscribeYoutubeVideo,
+    UnderstandImageBytes,
 )
 from agent.utils import gemini_client, gemini_model_liteLLM
 
@@ -41,7 +42,7 @@ STEP_CALLBACKS = [delay_8_seconds]
 # --- Basic Agent Definition ---
 # ----- THIS IS WERE YOU CAN BUILD WHAT YOU WANT ------
 class BasicAgent:
-    def __init__(self, model="gemini-2.5-flash-preview-05-20"):
+    def __init__(self, model="gemini-2.5-flash-preview-05-20", if_sleep=True):
         self.model = model
         self.client = gemini_client()
         transcribe_youtube_video = TranscribeYoutubeVideo()
@@ -50,8 +51,14 @@ class BasicAgent:
         visit_web_tool = VisitWebpageTool()
         download_file_tool = DownloadFile()
         read_excel_file_tool = ReadExcelFileBytes()
+        understand_image_bytes = UnderstandImageBytes()
 
         model = gemini_model_liteLLM(self.model)
+
+        if if_sleep:
+            STEP_CALLBACKS = [delay_8_seconds]
+        else:
+            STEP_CALLBACKS = None
         self.code_agent = CodeAgent(
             tools=[
                 transcribe_youtube_video,
@@ -60,6 +67,7 @@ class BasicAgent:
                 visit_web_tool,
                 download_file_tool,
                 read_excel_file_tool,
+                understand_image_bytes,
             ],
             model=model,
             step_callbacks=STEP_CALLBACKS,
