@@ -37,7 +37,7 @@ def question_scorer(
             return True
         except ValueError:
             return False
-        
+
     if model_answer is None:
         model_answer = "None"
 
