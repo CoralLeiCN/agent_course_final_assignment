@@ -8,3 +8,5 @@ agent_course_final_assignment.egg-info
 # example (for debugging)
 example/*
 
+# macOS
+.DS_Store
