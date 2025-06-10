@@ -5,16 +5,17 @@ from google import genai
 from google.genai import types
 from google.genai.types import GenerateContentConfig, ThinkingConfig
 from pydantic import BaseModel
-from smolagents import CodeAgent, VisitWebpageTool, WebSearchTool
+from smolagents import CodeAgent, Tool, VisitWebpageTool, WebSearchTool
 
 from agent.prompts import system_prompt
 from agent.tools import (
+    CodeExecutionTool,
     DownloadFile,
     ReadExcelFileBytes,
     TranscribeAudioBytes,
     TranscribeYoutubeVideo,
     UnderstandImageBytes,
-    CodeExecutionTool,
+    WikipediaSearchTool,
 )
 from agent.utils import gemini_client, gemini_model_liteLLM
 
@@ -54,6 +55,7 @@ class BasicAgent:
         read_excel_file_tool = ReadExcelFileBytes()
         understand_image_bytes = UnderstandImageBytes()
         code_execution_tool = CodeExecutionTool()
+        wiki_retriever = WikipediaSearchTool()
 
         model = gemini_model_liteLLM(self.model)
 
@@ -71,6 +73,7 @@ class BasicAgent:
                 read_excel_file_tool,
                 understand_image_bytes,
                 code_execution_tool,
+                wiki_retriever,
             ],
             model=model,
             step_callbacks=STEP_CALLBACKS,

@@ -3,8 +3,31 @@ import io
 import requests
 from google import genai
 from google.genai import types
+from langchain_community.retrievers import WikipediaRetriever
 from PIL import Image
 from smolagents import Tool
+
+
+class WikipediaSearchTool(Tool):
+    name = "wikipedia_search"
+    description = """Search Wikipedia for a given query and return the summary of the first result.
+    This tool uses the WikipediaRetriever to fetch the summary of the first search result.
+    """
+    inputs = {
+        "query": {
+            "type": "string",
+            "description": "The search query to look up on Wikipedia",
+        },
+    }
+    output_type = "string"
+
+    def forward(self, query: str):
+        retriever = WikipediaRetriever()
+        docs = retriever.invoke(query)
+        if docs:
+            return docs
+        else:
+            return "No results found."
 
 
 class CodeExecutionTool(Tool):
