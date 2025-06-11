@@ -6,13 +6,13 @@ from google.genai import types
 from langchain_community.retrievers import WikipediaRetriever
 from PIL import Image
 from smolagents import Tool
+import wikipedia
+from markdownify import markdownify as md
 
 
 class WikipediaSearchTool(Tool):
     name = "wikipedia_search"
-    description = """Search Wikipedia for a given query and return the summary of the first result.
-    This tool uses the WikipediaRetriever to fetch the summary of the first search result.
-    """
+    description = """Search Wikipedia for a given query, print the relevant title, and then return the content of the first result."""
     inputs = {
         "query": {
             "type": "string",
@@ -22,12 +22,15 @@ class WikipediaSearchTool(Tool):
     output_type = "string"
 
     def forward(self, query: str):
-        retriever = WikipediaRetriever()
-        docs = retriever.invoke(query)
+        docs = wikipedia.search(query, results=5)
         if docs:
-            return docs
+            print(f"Page title: {docs}")
+            page = wikipedia.page(docs[0])
+            page_html = page.html()
+            context = md(page_html)
+            return context
         else:
-            return "No results found."
+            return "No results found for the query."
 
 
 class CodeExecutionTool(Tool):
