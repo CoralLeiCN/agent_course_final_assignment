@@ -90,12 +90,13 @@ class BasicAgent:
             thinking_config = None
         else:
             thinking_config = ThinkingConfig(
-                thinking_budget=0,  # Use `0` to turn off thinking
+                thinking_budget=1024,  # Use `0` to turn off thinking
             )
         print(f"Agent received question (first 50 chars): {question[:50]}...")
         # Run the agent to find the best catering service
 
         answer = self.code_agent.run(f"Task id: {task_id}, Question: {question}")
+        print(f"Agent found answer: {answer}")
         response = client.models.generate_content(
             model=model,
             contents=f"Question: {question}, Answer: {str(answer)}",
@@ -106,6 +107,6 @@ class BasicAgent:
                 thinking_config=thinking_config,
             ),
         )
-        print(response)
+        print(f"Final answer after formatter by model: {response.parsed.answer}")
 
         return response.parsed.answer
