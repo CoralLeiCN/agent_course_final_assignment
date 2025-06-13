@@ -28,6 +28,12 @@ class final_answer(BaseModel):
     answer: str
 
 
+def lowercase_if_comma(s):
+    if s.count(",") > 2:
+        return s.lower()
+    return s
+
+
 def delay_8_seconds(
     agent: CodeAgent,
 ) -> bool:
@@ -99,14 +105,16 @@ class BasicAgent:
         print(f"Agent found answer: {answer}")
         response = client.models.generate_content(
             model=model,
-            contents=f"Question: {question}, Answer: {str(answer)}",
+            contents=f"Here is the provided question: {question}, infomation or answer: {str(answer)} \n Now, resposne with the answer that followed the rules.",
             config=types.GenerateContentConfig(
                 system_instruction=system_prompt,
                 response_mime_type="application/json",
+                temperature=0.0,
                 response_schema=final_answer,
                 thinking_config=thinking_config,
             ),
         )
         print(f"Final answer after formatter by model: {response.parsed.answer}")
+        result = lowercase_if_comma(response.parsed.answer)
 
-        return response.parsed.answer
+        return result

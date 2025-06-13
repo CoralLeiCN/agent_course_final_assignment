@@ -12,7 +12,8 @@ def gemini_model_liteLLM(
     return LiteLLMModel(
         model_id=f"gemini/{model}",
         response_format=response_format,
-        thinking={"type": "enabled", "budget_tokens": 0},
+        temperature=0.0,
+        thinking={"type": "enabled", "budget_tokens": 1024},
     )
 
 
