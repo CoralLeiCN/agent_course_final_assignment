@@ -95,9 +95,8 @@ class BasicAgent:
         if model.startswith("gemini-2.0-flash"):
             thinking_config = None
         else:
-            thinking_config = ThinkingConfig(
-                thinking_budget=1024,  # Use `0` to turn off thinking
-            )
+            # let model decide the budget
+            thinking_config = ThinkingConfig()
         print(f"Agent received question (first 50 chars): {question[:50]}...")
         # Run the agent to find the best catering service
 
