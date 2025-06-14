@@ -229,7 +229,7 @@ class ReadExcelFileBytes(Tool):
             "description": "the bytes content of the Excel file",
         },
     }
-    output_type = "string"
+    output_type = "object"  # pandas DataFrame
 
     def forward(self, excel_bytes: str):
         from io import BytesIO
@@ -237,4 +237,5 @@ class ReadExcelFileBytes(Tool):
         import pandas as pd
 
         df = pd.read_excel(BytesIO(excel_bytes))
-        return df.to_string()
+        print(f"Read {len(df)} rows from the Excel file as pandas DataFrame.")
+        return df

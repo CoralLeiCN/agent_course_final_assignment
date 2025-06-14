@@ -82,6 +82,7 @@ class BasicAgent:
                 wiki_retriever,
             ],
             model=model,
+            additional_authorized_imports=["pandas"],
             step_callbacks=STEP_CALLBACKS,
             max_steps=15,
         )
