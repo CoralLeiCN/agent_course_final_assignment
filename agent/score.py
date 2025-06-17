@@ -1,10 +1,8 @@
 # modified from https://huggingface.co/spaces/gaia-benchmark/leaderboard/blob/main/scorer.py
-import json
 import re
 import string
 import warnings
 
-import numpy as np
 
 
 def normalize_number_str(number_str: str) -> float:

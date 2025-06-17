@@ -1,13 +1,12 @@
 import time
 
 import litellm
-from google import genai
 from google.genai import types
-from google.genai.types import GenerateContentConfig, ThinkingConfig
+from google.genai.types import ThinkingConfig
 from pydantic import BaseModel
-from smolagents import CodeAgent, Tool, VisitWebpageTool, WebSearchTool
+from smolagents import CodeAgent, VisitWebpageTool, WebSearchTool
 
-from agent.prompts import system_prompt
+from agent.prompts import formatter_system_prompt, system_prompt
 from agent.tools import (
     CodeExecutionTool,
     DownloadFile,
@@ -101,13 +100,15 @@ class BasicAgent:
         print(f"Agent received question (first 50 chars): {question[:50]}...")
         # Run the agent to find the best catering service
 
-        answer = self.code_agent.run(f"Task id: {task_id}, Question: {question}")
+        answer = self.code_agent.run(
+            f"{system_prompt}\nTask id: {task_id}, Question: {question}"
+        )
         print(f"Agent found answer: {answer}")
         response = client.models.generate_content(
             model=model,
             contents=f"Here is the provided question: {question}, infomation or answer: {str(answer)} \n Now, resposne with the answer that followed the rules.",
             config=types.GenerateContentConfig(
-                system_instruction=system_prompt,
+                system_instruction=formatter_system_prompt,
                 response_mime_type="application/json",
                 temperature=0.0,
                 response_schema=final_answer,

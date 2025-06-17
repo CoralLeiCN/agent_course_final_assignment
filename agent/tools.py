@@ -1,13 +1,12 @@
 import io
 
 import requests
+import wikipedia
 from google import genai
 from google.genai import types
-from langchain_community.retrievers import WikipediaRetriever
+from markdownify import markdownify as md
 from PIL import Image
 from smolagents import Tool
-import wikipedia
-from markdownify import markdownify as md
 
 
 class WikipediaSearchTool(Tool):

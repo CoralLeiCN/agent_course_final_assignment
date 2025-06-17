@@ -1,4 +1,3 @@
-import os
 
 from google import genai
 from smolagents import LiteLLMModel
