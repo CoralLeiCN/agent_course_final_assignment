@@ -1,1 +1,1 @@
-from .agents import BasicAgent
+from .agents import BasicAgent as BasicAgent
