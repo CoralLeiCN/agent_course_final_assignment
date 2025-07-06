@@ -4,7 +4,6 @@ import string
 import warnings
 
 
-
 def normalize_number_str(number_str: str) -> float:
     # we replace these common units and commas to allow
     # conversion to float

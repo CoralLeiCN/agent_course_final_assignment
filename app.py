@@ -1,17 +1,10 @@
-import inspect
 import os
-import time
 
 import gradio as gr
 import pandas as pd
 import requests
-from pydantic import BaseModel
-from smolagents import CodeAgent, WebSearchTool
 
 from agent import BasicAgent
-from agent.prompts import system_prompt
-from agent.tools import TranscribeYoutubeVideo
-from agent.utils import gemini_model_liteLLM
 
 # --- Constants ---
 DEFAULT_API_URL = "https://agents-course-unit4-scoring.hf.space"
@@ -111,6 +104,7 @@ def run_and_submit_all(profile: gr.OAuthProfile | None):
         "agent_code": agent_code,
         "answers": answers_payload,
     }
+
     status_update = f"Agent finished. Submitting {len(answers_payload)} answers for user '{username}'..."
     print(status_update)
 
