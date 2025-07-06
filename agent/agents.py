@@ -15,6 +15,7 @@ from agent.tools import (
     TranscribeYoutubeVideo,
     UnderstandImageBytes,
     WikipediaSearchTool,
+    chess_move,
 )
 from agent.utils import gemini_client, gemini_model_liteLLM
 
@@ -79,6 +80,7 @@ class BasicAgent:
                 understand_image_bytes,
                 code_execution_tool,
                 wiki_retriever,
+                chess_move,
             ],
             model=model,
             additional_authorized_imports=["pandas"],

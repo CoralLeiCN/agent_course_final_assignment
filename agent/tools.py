@@ -8,6 +8,14 @@ from markdownify import markdownify as md
 from PIL import Image
 from smolagents import Tool
 
+from smolagents import Tool
+
+chess_move = Tool.from_space(
+    "Agents-MCP-Hackathon/chess-mcp-server",
+    name="chess_server",
+    description="Find the best move for chess",
+    api_name="/predict_2" # top moves
+)
 
 class WikipediaSearchTool(Tool):
     name = "wikipedia_search"
@@ -107,7 +115,7 @@ class UnderstandImageBytes(Tool):
         prompt = "Analyze this image and provide a description of its content."
 
         response = client.models.generate_content(
-            model="gemini-2.5-flash-preview-05-20",
+            model="gemini-2.5-pro",
             contents=[
                 f"{prompt} And answer the question accurately based on the visual information in the image. question: {question} ",
                 types.Part.from_bytes(
