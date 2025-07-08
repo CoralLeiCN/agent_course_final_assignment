@@ -59,3 +59,10 @@ uv run gradio app.py
 | + VisitWebpageTool | gemini-flash 2.5 | 10-12 | cannot see image, mp3, excel file. |
 | + DownloadFile & ReadExcelFileBytes | gemini-flash 2.5 | 13 |  |
 |  |  |  |  |
+
+
+# Developer
+## Install pre-commit
+```bash
+uv run pre-commit install
+```
