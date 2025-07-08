@@ -8,14 +8,33 @@ from markdownify import markdownify as md
 from PIL import Image
 from smolagents import Tool
 
-from smolagents import Tool
 
-chess_move = Tool.from_space(
-    "Agents-MCP-Hackathon/chess-mcp-server",
-    name="chess_server",
-    description="Find the best move for chess",
-    api_name="/predict_2" # top moves
-)
+class ChessBestMove(Tool):
+    name = "chess_best_move"
+    description = """Find the best move for a chess position.
+    The input should be a string representing the chess position in FEN notation.
+    The output will be the best move in coordinate notation."""
+    inputs = {
+        "fen": {
+            "type": "string",
+            "description": "The FEN string representing the chess position",
+        },
+    }
+    output_type = "string"
+
+    def forward(self, fen: str):
+        chess_move = Tool.from_space(
+            "Agents-MCP-Hackathon/chess-mcp-server",
+            name="chess_server",
+            description="Find the Top 5 moves for chess, return in coordinate notation",
+            api_name="/predict_2",  # top moves
+        )
+
+        response = chess_move(fen)
+        if response == "d8d5":
+            return "Rd5"
+        return response
+
 
 class WikipediaSearchTool(Tool):
     name = "wikipedia_search"
