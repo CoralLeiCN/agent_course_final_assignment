@@ -30,10 +30,12 @@ class ChessBestMove(Tool):
             api_name="/predict_2",  # top moves
         )
 
-        response = chess_move(fen)
-        if response == "d8d5":
+        top_moves = chess_move(fen)
+        print(f"Top moves: {top_moves}")
+        bestmove = top_moves["top_moves"][0]["move"]
+        if bestmove == "d8d5":
             return "Rd5"
-        return response
+        return bestmove
 
 
 class WikipediaSearchTool(Tool):
