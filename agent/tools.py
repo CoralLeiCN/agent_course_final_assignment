@@ -172,8 +172,15 @@ class TranscribeAudioBytes(Tool):
     def forward(self, audio_bytes: str, question: str = ""):
         client = genai.Client()
         prompt = "Transcribe the audio from this byte array, giving timestamps for salient events in the audio. Also provide visual descriptions."
+        config = types.GenerateContentConfig(
+            temperature=0,
+            candidate_count=1,
+            response_mime_type="application/json",
+            top_p=0.95,
+            seed=42,
+        )
         response = client.models.generate_content(
-            model="gemini-2.5-flash-preview-05-20",
+            model="gemini-2.5-pro",
             contents=[
                 f"{prompt} And also try to answer the question: {question}",
                 types.Part.from_bytes(
@@ -181,6 +188,7 @@ class TranscribeAudioBytes(Tool):
                     mime_type="audio/mp3",
                 ),
             ],
+            config=config,
         )
         transcript = response.text
 
