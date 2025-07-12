@@ -11,6 +11,7 @@ def gemini_model_liteLLM(
         model_id=f"gemini/{model}",
         response_format=response_format,
         temperature=0.0,
+        seed=42,
         thinking={"type": "enabled", "budget_tokens": 1024},
     )
 
