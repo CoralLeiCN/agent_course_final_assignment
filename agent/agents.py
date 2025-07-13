@@ -8,6 +8,7 @@ from smolagents import CodeAgent, VisitWebpageTool, WebSearchTool
 
 from agent.prompts import formatter_system_prompt, system_prompt
 from agent.tools import (
+    ChessBestMove,
     CodeExecutionTool,
     DownloadFile,
     ReadExcelFileBytes,
@@ -15,7 +16,6 @@ from agent.tools import (
     TranscribeYoutubeVideo,
     UnderstandImageBytes,
     WikipediaSearchTool,
-    ChessBestMove,
 )
 from agent.utils import gemini_client, gemini_model_liteLLM
 
@@ -115,6 +115,8 @@ class BasicAgent:
                 temperature=0.0,
                 response_schema=final_answer,
                 thinking_config=thinking_config,
+                top_p=0.95,
+                seed=42,
             ),
         )
         print(f"Final answer after formatter by model: {response.parsed.answer}")
