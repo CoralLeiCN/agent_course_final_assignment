@@ -9,6 +9,51 @@ from PIL import Image
 from smolagents import Tool
 
 
+class BaseballQATool(Tool):
+    name = "baseball_qa"
+    description = (
+        """This tool can answer questions about baseball players information."""
+    )
+    inputs = {
+        "player_name": {
+            "type": "string",
+            "description": "The name of the baseball player.",
+        },
+        "question": {
+            "type": "string",
+            "description": "The question to ask about the player.",
+        },
+        "team_name": {
+            "type": "string",
+            "description": "The name of the team the player is associated with.",
+            "nullable": True,
+        },
+    }
+    output_type = "string"
+
+    def forward(self, player_name: str, question: str, team_name: str = ""):
+        config = types.GenerateContentConfig(
+            temperature=0,
+            candidate_count=1,
+            response_mime_type="application/json",
+            top_p=0.95,
+            seed=42,
+        )
+        client = genai.Client()
+        response = client.models.generate_content(
+            model="gemini-2.5-pro",
+            contents=types.Content(
+                parts=[
+                    types.Part(
+                        text=f"Pay attention to the details. Make corrections if needed. Player: {player_name}\nTeam: {team_name}\nQuestion: {question}"
+                    )
+                ],
+            ),
+            config=config,
+        )
+        return response.text
+
+
 class ChessBestMove(Tool):
     name = "chess_best_move"
     description = """Find the best move for a chess position.

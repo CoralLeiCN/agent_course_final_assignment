@@ -16,6 +16,7 @@ from agent.tools import (
     TranscribeYoutubeVideo,
     UnderstandImageBytes,
     WikipediaSearchTool,
+    BaseballQATool,
 )
 from agent.utils import gemini_client, gemini_model_liteLLM
 
@@ -63,6 +64,7 @@ class BasicAgent:
         code_execution_tool = CodeExecutionTool()
         wiki_retriever = WikipediaSearchTool()
         chess_best_move = ChessBestMove()
+        baseball_qa_tool = BaseballQATool()
         model = gemini_model_liteLLM(self.model)
 
         if if_sleep:
@@ -81,6 +83,7 @@ class BasicAgent:
                 code_execution_tool,
                 wiki_retriever,
                 chess_best_move,
+                baseball_qa_tool,
             ],
             model=model,
             additional_authorized_imports=["pandas"],
