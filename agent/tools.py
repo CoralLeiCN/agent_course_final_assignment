@@ -103,7 +103,7 @@ class WikipediaSearchTool(Tool):
             print(f"Page title: {docs}")
             page = wikipedia.page(docs[0])
             page_html = page.html()
-            context = md(page_html)
+            context = md(page_html)[:50000]
             return context
         else:
             return "No results found for the query."
