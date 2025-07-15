@@ -11,7 +11,9 @@ from smolagents import Tool
 
 class BaseballQATool(Tool):
     name = "baseball_qa"
-    description = """This tool can answer questions about baseball players information. You must provide the accurate player name, team name and question."""
+    description = (
+        """This tool can answer questions about baseball players information."""
+    )
     inputs = {
         "player_name": {
             "type": "string",
