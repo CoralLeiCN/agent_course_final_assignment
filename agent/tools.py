@@ -11,9 +11,7 @@ from smolagents import Tool
 
 class BaseballQATool(Tool):
     name = "baseball_qa"
-    description = (
-        """This tool can answer questions about baseball players information."""
-    )
+    description = """This tool can answer questions about baseball players information. You must provide the accurate player name, team name and question."""
     inputs = {
         "player_name": {
             "type": "string",
@@ -32,12 +30,15 @@ class BaseballQATool(Tool):
     output_type = "string"
 
     def forward(self, player_name: str, question: str, team_name: str = ""):
+        # Define the grounding tool
+        grounding_tool = types.Tool(google_search=types.GoogleSearch())
+
         config = types.GenerateContentConfig(
             temperature=0,
             candidate_count=1,
-            response_mime_type="application/json",
             top_p=0.95,
             seed=42,
+            tools=[grounding_tool],
         )
         client = genai.Client()
         response = client.models.generate_content(
@@ -45,7 +46,7 @@ class BaseballQATool(Tool):
             contents=types.Content(
                 parts=[
                     types.Part(
-                        text=f"Pay attention to the details. Make corrections if needed. Player: {player_name}\nTeam: {team_name}\nQuestion: {question}"
+                        text=f"Player: {player_name}\nTeam: {team_name}\nQuestion: {question}"
                     )
                 ],
             ),
@@ -179,7 +180,12 @@ class UnderstandImageBytes(Tool):
         client = genai.Client()
         image = Image.open(io.BytesIO(image_bytes))
         prompt = "Analyze this image and provide a description of its content."
-
+        config = types.GenerateContentConfig(
+            temperature=0,
+            candidate_count=1,
+            top_p=0.95,
+            seed=42,
+        )
         response = client.models.generate_content(
             model="gemini-2.5-pro",
             contents=[
@@ -189,6 +195,7 @@ class UnderstandImageBytes(Tool):
                     mime_type=f"image/{image.format}",
                 ),
             ],
+            config=config,
         )
 
         return response.text
@@ -220,7 +227,6 @@ class TranscribeAudioBytes(Tool):
         config = types.GenerateContentConfig(
             temperature=0,
             candidate_count=1,
-            response_mime_type="application/json",
             top_p=0.95,
             seed=42,
         )
@@ -261,6 +267,12 @@ class TranscribeYoutubeVideo(Tool):
     output_type = "string"
 
     def forward(self, youtube_uri: str, question: str = ""):
+        config = types.GenerateContentConfig(
+            temperature=0,
+            candidate_count=1,
+            top_p=0.95,
+            seed=42,
+        )
         client = genai.Client()
         prompt = "Transcribe the audio from this video, giving timestamps for salient events in the video. Also provide visual descriptions."
         response = client.models.generate_content(
@@ -273,6 +285,7 @@ class TranscribeYoutubeVideo(Tool):
                     ),
                 ]
             ),
+            config=config,
         )
         transcript = response.text
 
