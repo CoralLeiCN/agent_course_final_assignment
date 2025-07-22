@@ -47,6 +47,10 @@ uv run app.py
 uv run gradio app.py
 ```
 
+6. After run, sync the repo back to huggingface Space
+```bash
+git remote set-url origin https://huggingface.co/spaces/CoralLeiCN/agent_course_final_assignment
+```
 # experiments
 The score is max score after a few runs
 | Features | Model | Score (out of 20) | Notes |
@@ -72,3 +76,7 @@ The score is max score after a few runs
 ```bash
 uv run pre-commit install
 ```
+
+## export requirements.txt
+```bash
+uv run pip freeze > requirements.txt
