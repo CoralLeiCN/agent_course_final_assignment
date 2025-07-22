@@ -79,4 +79,5 @@ uv run pre-commit install
 
 ## export requirements.txt
 ```bash
-uv run pip freeze > requirements.txt
+uv export --format requirements-txt --no-dev --no-hashes --output-file requirements.txt
+```
