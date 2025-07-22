@@ -16,7 +16,7 @@ Check out the configuration reference at https://huggingface.co/docs/hub/spaces-
 
 
 
-# step by step
+# Step by step
 1. Develop the app locally by clone the repo, for example:
 ```bash
 git clone https://huggingface.co/spaces/CoralLeiCN/agent_course_final_assignment
@@ -53,17 +53,19 @@ The score is max score after a few runs
 | --- | --- | --- | --- |
 | Prompted LLM | gemini-flash 2.0 | 1 | Format could be wrong |
 | + Structured Output | gemini-flash 2.0 | 3 |  |
-| + System prompt from GAIA, slightly modified | gemini-flash 2.0 | 3 |  |
-| + Agentic LLM with Smolagent & Add “Understand video” tool using gemini-flash. | gemini-flash 2.0 | 4 | Results varied due to `Codeagent` output formatting issues. |
-| + WebSearchTool | gemini-flash 2.0 | 7 | Greatly improved, still has formatting issues |
+| + System prompt from GAIA (slightly modified) | gemini-flash 2.0 | 3 |  |
+| + AI Agent by smolagent & "Understand Video" Tool | gemini-flash 2.0 | 4 | Results varied due to Code-Agent output formatting issues. |
+| + WebSearchTool | gemini-flash 2.0 | 7 | Greatly improved, but still has formatting issues. |
 | + Change from flash 2.0 to flash 2.5 | gemini-flash 2.5 | 7 |  |
 | + VisitWebpageTool | gemini-flash 2.5 | 10-12 | Cannot see image, mp3, excel file. |
 | + DownloadFile & ReadExcelFileBytes | gemini-flash 2.5 | 13 |  |
 | + TranscribeAudioBytes | gemini-flash 2.5 | 14 |  |
 | + CodeExecutionTool | gemini-flash 2.5 | 14 |  |
-| + WikipediaSearchTool (customised using wikipedia + markdownify) | gemini-flash 2.5 | 15 | Tested both WikipediaRetriever and WikipediaLoader from LangChain, but their performance was limited — those omit table data, which can include key information. |
-| + Increase thinking budget on flash2.5 for performance & Edited system prompt | gemini-flash 2.5, temperature = 0 for consistency. | 15-17 | Stability is the key challenge. Can achieve 17 with GAIA score function, but this assignment is using exact match, so formatter needs improvement. |
-| + chess best move tool & Change Image understanding model to gemini-pro 2.5 | gemini-flash 2.5 & gemini-pro 2.5 | 18 | conversion of digital chessboard images to FEN strings is unstable. |
+| + WikipediaSearchTool (customised using wikipedia + markdownify) | gemini-flash 2.5 | 15 | Tested both WikipediaRetriever and WikipediaLoader from LangChain, but their performance was bad as they omit table data, which can contain key information. |
+| + Increase thinking budget, edited system prompt & Set temperature to 0 for consistency | gemini-flash 2.5 | 15-17 | Stability is the key challenge.  Can achieve a score of 17 with the GAIA score function, but this assignment uses an exact match, so the formatter needs improvement. |
+| + Chess Best Move Tool & Upgraded Image Understanding Model | gemini-flash 2.5 gemini-pro 2.5 | 18 | Chess tool is from a Hugging Face Space. The conversion of digital chessboard images to FEN strings is unstable by Gemini Pro.  |
+| + Gemini pro with Grounding_tool (GoogleSearch) for baseball questions | gemini-flash 2.5 gemini-pro 2.5 | 19 | One question could not be solved by Flash with Duckduckgo |
+| / | gemini-flash 2.5 gemini-pro 2.5 | 20 | Many Many runs to achieve 20. |
 
 # Developer
 ## Install pre-commit
